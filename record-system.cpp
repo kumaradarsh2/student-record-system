@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -55,7 +56,7 @@ void addStudent() {
     std::cin >> obj.age;
 
     std::cout << "Enter your branch: ";
-    std::cin >> obj.branch;
+    std::getline(std::cin, obj.branch);
 
     std::cout << "Enter your marks" << std::endl;;
     for (int i = 0; i < 3; ++i) {
@@ -64,10 +65,15 @@ void addStudent() {
     }
 
     studentList.push_back(obj);
+
+    std::system("clear"); // clearing before going to next window
+
+    std::cout << obj.name << " has been added." << std::endl;   
 }
 
 void viewStudent() {
     // displays all the students
+    std::cout << "Displaying Students Ids" << std::endl;
     for (Student elem : studentList) {
         std::cout << elem << std::endl;
     }
@@ -79,14 +85,18 @@ void searchStudent() {
     std::cout << "Enter the id: ";
     std::cin >> searchId;
 
+    bool found = false;
     // loop through the list and print if found
     for (auto elem : studentList) {
         if (elem.id == searchId) {
+            found = true;
             std::cout << elem << std::endl;
             // breaks out of loop after search is done
             break;
         }
     }
+
+    if (!found) std::cout << "Student not found" << std::endl;
 }
 
 void modifyStudent() {
@@ -121,28 +131,45 @@ void deleteStudent() {
     }
 }
 
-int exitProgram() {
-    // exits the program
-    return 0;
-}
+void userChoice(int choice) {
+    switch(choice) {
+        case 1: addStudent(); break;
+        case 2: viewStudent(); break;
+        case 3: searchStudent(); break;
+        case 4: modifyStudent(); break;
+        case 5: deleteStudent(); break;
+        case 6: exit(0); break;
+        default: std::cout << "Invalid choice.\n";
+    }
+}   
 
 int main() {
     int choice;
 
-    // do-while loop to run the program until user chooses to exit
     do {
+        // do-while loop to run the program until user chooses to exit
+        std::system("clear");
         displayStudent();
         std::cout << "Enter choice: ";
         std::cin >> choice;
 
-        switch(choice) {
-            case 1: addStudent(); break;
-            case 2: viewStudent(); break;
-            case 3: searchStudent(); break;
-            case 4: modifyStudent(); break;
-            case 5: deleteStudent(); break;
-            case 6: exitProgram(); break;
-            default: std::cout << "Invalid choice.\n";
+        // Clear the screen after taking choice from the user
+        std::system("clear");
+
+        if (choice >=1 && choice <= 5) {
+            userChoice(choice);
+        }
+        else if (choice == 6) {
+            std::cout << "Exiting the program...\n";
+        }
+        else {
+            std::cout << "Invalid choice. Please try again.\n";
+        }
+
+        if (choice != 6) {
+            std::cout << "\nPress enter to go back to menu...";
+            std::cin.ignore();
+            std::cin.get(); // wait for enter key
         }
 
     } while (choice != 6);

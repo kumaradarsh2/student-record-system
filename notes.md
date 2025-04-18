@@ -51,7 +51,6 @@ It's a user-defined data type which holds its own data members and member functi
 Which can be accessed by creating instance of class which is known as object.
 Class is like blueprint for an object.
 
-
 // Making a list to store the students
 
 
@@ -70,3 +69,13 @@ For achieving File Handling we need to do these steps:
 
 
 // Streams in c++:
+
+
+// Loop logic used to run the program over and over again unless the user exits 
+LOOP:
+    1. Show menu
+    2. Get user input
+    3. Call function
+    4. Pause so user can read
+    5. Repeat unless input was "exit"
+
