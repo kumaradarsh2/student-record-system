@@ -79,3 +79,14 @@ LOOP:
     4. Pause so user can read
     5. Repeat unless input was "exit"
 
+
+
+<!-- Modifying the element of ranged based for loop through Pointer -->
+// (auto*)
+
+for (auto* elem : studentList) {
+    // Now elem is a pointer a Student object
+    if (elem != nullptr) {
+        *elem = // set value here 
+    }
+}
