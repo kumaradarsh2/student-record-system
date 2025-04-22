@@ -36,11 +36,12 @@ void displayStudent() {
     std::cout << "6.Exit" << std::endl;
 }
 
+// This is the array containing elements of user-defined data type (eg. Student in this case)
 std::vector<Student> studentList;
 
+// Function to add students to studentList
 void addStudent() {
-    // adds student
-    // creating an student object
+    // creating a student object
     Student obj;
 
     std::cout << "Enter your id: ";
@@ -55,10 +56,11 @@ void addStudent() {
     std::cout << "Enter your age: ";
     std::cin >> obj.age;
 
+    std::cin.ignore(); 
     std::cout << "Enter your branch: ";
     std::getline(std::cin, obj.branch);
 
-    std::cout << "Enter your marks" << std::endl;;
+    std::cout << "Enter your marks" << std::endl;
     for (int i = 0; i < 3; ++i) {
         std::cout << "Enter subject " << i + 1 << ": ";
         std::cin >> obj.marks[i];
@@ -105,14 +107,61 @@ void modifyStudent() {
     std::cout << "Enter the id: ";
     std::cin >> searchId;
 
+    bool found = false;
+
     // loop through the list and print if found
-    for (auto elem : studentList) {
+
+    // Note: ranged for loop provides a way to iterate through a container but it gives "copy" of each element
+    // If we wanna modify original elements of container, we use "Reference" (auto&) or a "Pointer" (auto*) in Loop Declaration
+    for (auto& elem : studentList) {
         if (elem.id == searchId) {
+            found = true;
             // ask to modify
             std::cout << "What do you want to modify? \n";
+            std::cout << "1. Name" << std::endl;
+            std::cout << "2. Age" << std::endl;
+            std::cout << "3. Branch" << std::endl;
+            std::cout << "4. Marks" << std::endl;
+            // std::cout << "5. Modify all files" << std::endl;
+
+            int modify;
+            std::cin >> modify;
+            
+            switch (modify) {
+                case 1: 
+                    std::cin.ignore(); // flush leftover newline
+                    std::cout << "Enter your name: ";
+                    std::getline(std::cin, elem.name);
+                    std::cout << "Name has been modified" << std::endl;
+                    break;
+                case 2:
+                    std::cout << "Enter your age: ";
+                    std::cin >> elem.age;
+                    std::cout << "Age has been modified" << std::endl;
+                    break;
+                case 3: 
+                    std::cin.ignore(); 
+                    std::cout << "Enter your branch: ";
+                    std::getline(std::cin, elem.branch);
+                    std::cout << "Branch has been modified" << std::endl;
+                    break;
+                case 4: 
+                    std::cout << "Enter your marks" << std::endl;
+                    for (int i = 0; i < 3; ++i) {
+                        std::cout << "Enter subject " << i + 1 << ": ";
+                        std::cin >> elem.marks[i];
+                    }
+                    std::cout << "Marks have been modified" << std::endl;
+                    break;
+
+                default: std::cout << "Invalid input" << std::endl;
+            }
+
             break;
-        }
+        }   
     }
+
+    if (!found) std::cout << "Student not found" << std::endl;
 }
 
 void deleteStudent() {
