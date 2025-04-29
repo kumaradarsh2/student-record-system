@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cstdlib>
+#include <cstdlib> // For std::system()
 #include <string>
 #include <vector>
 
@@ -36,6 +36,28 @@ void displayStudent() {
     std::cout << "6.Exit" << std::endl;
 }
 
+// Adding an Input validation function
+// This function re-prompts the user to enter the valid integer until the user keeps entering invalid input (like "String")
+int getValidatedInt(const std::string& prompt) {
+    int num;
+    while (true) {
+        std::cout << prompt;
+        std::cin >> num;
+
+        if (std::cin.fail()) {
+            std::cin.clear(); // clear failbit
+            std::cin.ignore(1000, '\n'); // discard input buffer
+            std::system("clear");
+            std::cout << "Invalid Input. Please enter a number.\n\n";
+        }
+        else {
+            std::cin.ignore(1000, '\n'); // flush remaining buffer
+            return num;
+        }
+    }
+}
+
+
 // This is the array containing elements of user-defined data type (eg. Student in this case)
 std::vector<Student> studentList;
 
@@ -44,26 +66,26 @@ void addStudent() {
     // creating a student object
     Student obj;
 
-    std::cout << "Enter your id: ";
-    std::cin >> obj.id;
+    // std::cout << "Enter your id: ";
+    // std::cin >> obj.id;
+    obj.id = getValidatedInt("Enter your id: ");
 
-    std::cin.ignore(); // flush leftover newline
+    // std::cin.ignore(); // flush leftover newline
     std::cout << "Enter your name: ";
     // std::cin >> obj.name;
     // use std::getline instead
     std::getline(std::cin, obj.name);
 
-    std::cout << "Enter your age: ";
-    std::cin >> obj.age;
-
-    std::cin.ignore(); 
+    obj.age = getValidatedInt("Enter your age: ");
+    
+    // std::cin.ignore();  // this is unnecessary here cause getValidatedInt function already consumes the newline
     std::cout << "Enter your branch: ";
     std::getline(std::cin, obj.branch);
 
     std::cout << "Enter your marks" << std::endl;
     for (int i = 0; i < 3; ++i) {
-        std::cout << "Enter subject " << i + 1 << ": ";
-        std::cin >> obj.marks[i];
+        std::string prompt = "Enter subject " + std::to_string(i + 1) + ": ";
+        obj.marks[i] = getValidatedInt(prompt);
     }
 
     studentList.push_back(obj);
@@ -75,7 +97,7 @@ void addStudent() {
 
 void viewStudent() {
     // displays all the students
-    std::cout << "Displaying Students Ids" << std::endl;
+    std::cout << "\nDisplaying Students Ids\n" << std::endl;
     for (Student elem : studentList) {
         std::cout << elem << std::endl;
     }
@@ -83,9 +105,7 @@ void viewStudent() {
 
 void searchStudent() {
     // searches all the students
-    int searchId;
-    std::cout << "Enter the id: ";
-    std::cin >> searchId;
+    int searchId = getValidatedInt("Enter the id: ");
 
     bool found = false;
     // loop through the list and print if found
@@ -103,9 +123,7 @@ void searchStudent() {
 
 void modifyStudent() {
     // modifies all the students
-    int searchId;
-    std::cout << "Enter the id: ";
-    std::cin >> searchId;
+    int searchId = getValidatedInt("Enter the id: ");
 
     bool found = false;
 
@@ -135,8 +153,7 @@ void modifyStudent() {
                     std::cout << "Name has been modified" << std::endl;
                     break;
                 case 2:
-                    std::cout << "Enter your age: ";
-                    std::cin >> elem.age;
+                    elem.age = getValidatedInt("Enter your age: ");
                     std::cout << "Age has been modified" << std::endl;
                     break;
                 case 3: 
@@ -148,8 +165,8 @@ void modifyStudent() {
                 case 4: 
                     std::cout << "Enter your marks" << std::endl;
                     for (int i = 0; i < 3; ++i) {
-                        std::cout << "Enter subject " << i + 1 << ": ";
-                        std::cin >> elem.marks[i];
+                        std::string prompt = "Enter subject " + std::to_string(i + 1) + ": ";
+                        elem.marks[i] = getValidatedInt(prompt);
                     }
                     std::cout << "Marks have been modified" << std::endl;
                     break;
@@ -166,18 +183,21 @@ void modifyStudent() {
 
 void deleteStudent() {
     // deletes a student
-    int searchId;
-    std::cout << "Enter the id: ";
-    std::cin >> searchId;
+    int searchId = getValidatedInt("Enter the id: ");
 
+    bool validId = false;
+    
     // Using traditional for loop to delete the element
     for (size_t i = 0; i < studentList.size(); ++i) {
         if (studentList[i].id == searchId) {
+            validId = true;
             studentList.erase(studentList.begin() + i);
             std::cout << "Student deleted.\n";
             return; // exits function after student is deleted
         } 
     }
+
+    if (!validId) std::cout << "Invalid ID" << std::endl;
 }
 
 void userChoice(int choice) {
@@ -198,6 +218,9 @@ int main() {
     do {
         // do-while loop to run the program until user chooses to exit
         std::system("clear");
+
+        std::cout << "Student Record System\n" << std::endl;
+
         displayStudent();
         std::cout << "Enter choice: ";
         std::cin >> choice;
